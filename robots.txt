@@ -1,0 +1,7 @@
+User-agent: *
+Disallow: /Core/
+Disallow: /src/
+Disallow: /webroot/
+Disallow: /.htaccess
+Disallow: /robots.txt
+Disallow: /config.json

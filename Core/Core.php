@@ -2,60 +2,73 @@
 
 namespace Core;
 
+/*
+**  Core is the core of the program & can be considered as the main controller
+*/
 class Core
 {
     public function __construct()
     {
     }
 
+
+    /**
+     * Static Router
+     * 
+     * Checks if the route exist, returns null if that's not the case
+     * Else, the controller is initialized
+     * Checks if the method exist and applies if is found
+     * Otherwise display error 404, method not found
+     * 
+     */
     public function run()
     {
-
         include 'src/routes.php';
         $url = explode('/PiePHP', $_SERVER['REQUEST_URI']);
-        // echo "URL VAUT : ";
-        // echo "<pre>";
-        // var_dump($url);
-        // echo "</pre>";
+        /*echo "URL VAUT : ";
+        echo "<pre>";
+        var_dump($url);
+        echo "</pre>";*/
         //$route = array_filter($route);
         // echo "<pre>";
         // echo "Valeur : ";
         // print_r($route);
         // echo "</pre>";
         $route = Router::get($url[1]);
-        echo "ROUTE VAUT : ";
-        echo "<pre>";
-        var_dump($route);
-        echo "</pre>";
+        // echo "ROUTE VAUT : ";
+        // echo "<pre>";
+        // var_dump($route);
+        // echo "</pre>";
         $controllerName = 'src\\Controller\\' . ucfirst($route['controller']) . 'Controller';
         $actionName = $route['action'] . 'Action';
-
-        if($route == null)
-        {
-            echo "La route n'existe pas";
+        if($route == null){
+            die("404 - The path does not exist");
         }
-        else
-        {
-            if(class_exists($controllerName))
-            {
+        else{
+            if(class_exists($controllerName)){
                 $controller = new $controllerName;
-                if(method_exists($controller, $actionName))
-                {
+                if(method_exists($controller, $actionName)){
                     $controller->$actionName();
                 }
-                else
-                {
+                else{
                     echo "404 - Method does not exist";
                 }
             }
-            else
-            {
+            else{
                 echo "404 - Controller does not exist";
             }
         }        
     }
 
-    // public function dynamic_router()
+    /**
+     * Dynamic Router
+     * 
+     * Checks if the route exist, returns null if that's not the case
+     * Else, the controller is initialized
+     * Checks if the method exist and applies if
+     * Otherwise display error 404, method not found
+     */
+    // public function run()
     // {
     //     $params = explode(DIRECTORY_SEPARATOR, $_SERVER['REQUEST_URI']);        
     //     $params = array_filter($params);
