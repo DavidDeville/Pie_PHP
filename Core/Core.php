@@ -41,20 +41,20 @@ class Core
         // echo "</pre>";
         $controllerName = 'src\\Controller\\' . ucfirst($route['controller']) . 'Controller';
         $actionName = $route['action'] . 'Action';
-        if($route == null){
+        if($route == null) {
             die("404 - The path does not exist");
         }
-        else{
-            if(class_exists($controllerName)){
+        else {
+            if(class_exists($controllerName)) {
                 $controller = new $controllerName;
-                if(method_exists($controller, $actionName)){
+                if(method_exists($controller, $actionName)) {
                     $controller->$actionName();
                 }
-                else{
+                else {
                     echo "404 - Method does not exist";
                 }
             }
-            else{
+            else {
                 echo "404 - Controller does not exist";
             }
         }        

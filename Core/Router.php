@@ -16,15 +16,7 @@ class Router
     private static $routes;
     public static function connect($url, $route)
     {
-        
         self::$routes[$url] = $route;
-        // echo "<pre> route vaut ";
-        // var_dump($route);
-        // echo "</pre>";
-        
-        // echo "<pre> routes vaut ";
-        // var_dump(self::$routes);
-        // echo "</pre>";
     }
 
     /**
@@ -35,19 +27,10 @@ class Router
      */
     public static function get($url)
     {
-        // echo "ROUTES VAUT : ";
-        // echo "<pre>";
-        // var_dump(self::$routes[$url]);
-        // echo "</pre>";
-        if(array_key_exists($url, self::$routes))
-        {
-            // echo "<pre> Routes vaut : ";
-            // var_dump(self::$routes[$url]);
-            // echo "</pre>";
+        if(array_key_exists($url, self::$routes)) {
             return(self::$routes[$url]);
         }
-        else
-        {
+        else {
             return null;
         }
     }

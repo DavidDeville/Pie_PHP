@@ -1,6 +1,7 @@
 <?php
 
 namespace Core;
+use Core\Request;
 
 abstract class Controller
 {
@@ -8,6 +9,12 @@ abstract class Controller
      * @var string $_render - content of the view
      */
     protected static $_render = '';
+    protected $request;
+
+    public function __construct()
+    {
+        $this->request = new Request();
+    }
 
     /*
     **  Echo the render & destroys it after its displayed
@@ -29,7 +36,8 @@ abstract class Controller
      * If the file exists, adds the file content (view) in the layout
      * Echo file does not exist otherwise
      */
-    protected function render($view, $scope = []) {
+    protected function render($view, $scope = []) 
+    {
         extract($scope);
         $controller = basename(str_replace('\\', '/', get_class($this))); // --> UserController 
         $controller = str_replace('Controller', '', $controller); // --> User

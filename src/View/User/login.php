@@ -1,3 +1,4 @@
+<title>Login</title>
 <p>Formulaire de login : </p>
 <form action="/PiePHP/login" method="POST">
     <label for="user_mail"><b>Mail</b></label>

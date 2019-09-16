@@ -3,6 +3,7 @@
 namespace src\Controller;
 use Core\Controller;
 use src\Model\UserModel;
+use Core\ORM;
 
 /**
  * UserController contains methods related to the user
@@ -23,12 +24,13 @@ class UserController extends Controller
     public function registerAction()
     {
         // return (new UserModel())->save($statusMessage);
-        if(count($_POST) === 0){
+        if(count($_POST) === 0) {
             $this->render('register');
         }
         if(isset($_POST['user_mail']) && isset($_POST['user_pwd'])) {
-            $request = new UserModel();
-            $status = $request->create('users', ['email' => $_POST['user_mail'], 'password' => $_POST['user_pwd']]);
+            //$request = new UserModel();
+            $req = new ORM();
+            $status = $req->create('users', ['email' => $_POST['user_mail'], 'password' => $_POST['user_pwd']]);
             if(is_int($status)) {
                 // echo "ok";
                 $this->statusMessage = 'bien enregistré';
@@ -57,30 +59,26 @@ class UserController extends Controller
      */
     public function loginAction()
     {
-        if (count($_POST) === 0) { // formulaire non transmis
+        if (count($_POST) === 0) {
             $this->render('login'); 
-        } else {
+        } else { 
             $statusMessage = '';
-            if(isset($_POST['user_mail']) && isset($_POST['user_pwd']))
-            {
-                $request = new UserModel();
-                $status = $request->read('users', ['email'], '28');
-                if($status == false)
-                {
-                    $this->statusMessage = "connexion échouée";
-                    $this->render('login', [
+            if(isset($_POST['user_mail']) && isset($_POST['user_pwd'])) {
+                $req = new ORM();
+                $check_user = $req->check_user_exist('users');
+                if($check_user == true) {
+                    $id = $req->get_user_id($_POST['user_mail']);
+                    $status = $req->read('users', $id);
+                    $this->statusMessage = "connexion réussie";
+                    $this->render('index', [
                         'statusMessage' => $this->statusMessage
                     ]);
                 }
-                else
-                {
-                    // $this->statusMessage = "connexion réussie";   
-                    // $this->render('index', [
-                    //     'statusMessage' => $this->statusMessage
-                    // ]);
-                    echo "<pre>";
-                    print_r($status);
-                    echo "</pre>";
+                else {
+                    $this->statusMessage = "connexion échouée";
+                    $this->render('login', [
+                        'statusMessage' => $this->statusMessage
+                    ]);   
                 }
             }
         }

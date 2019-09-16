@@ -3,6 +3,7 @@
         echo $statusMessage;
     }
 ?>
+<title>Register</title>
 <p>Formulaire register : </p>
 <form action="" method="POST">
     <label for="user_mail"><b>Mail</b></label>
