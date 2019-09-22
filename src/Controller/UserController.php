@@ -23,28 +23,34 @@ class UserController extends Controller
      */
     public function registerAction()
     {
-        // return (new UserModel())->save($statusMessage);
-        if(count($_POST) === 0) {
+        $statusMessage = '';
+        $params_array = $this->request->getQueryParams();
+        if(count($params_array) === 0) {
             $this->render('register');
         }
-        if(isset($_POST['user_mail']) && isset($_POST['user_pwd'])) {
-            //$request = new UserModel();
-            $req = new ORM();
-            $status = $req->create('users', ['email' => $_POST['user_mail'], 'password' => $_POST['user_pwd']]);
-            if(is_int($status)) {
-                // echo "ok";
-                $this->statusMessage = 'bien enregistré';
-                $this->render('index', [
-                    'statusMessage' => $this->statusMessage
-                ]);
-                
-            } else { // inscription invalide
-                // echo "pas ok";
-                $this->statusMessage = 'mail deja existant';
-                $this->render('register', [
-                    'statusMessage' => $this->statusMessage
-                ]);
-            }   
+        if(isset($params_array['email']) && isset($params_array['password'])) {
+            $user = new UserModel($params_array);
+            if(!preg_match ("/^[^\W][a-zA-Z0-9_]+(\.[a-zA-Z0-9_]+)*\@[a-zA-Z0-9
+            _]+(\.[a-zA-Z0-9_]+)*\.[a-zA-Z]{2,4}$/", $params_array['email'])) {
+                $this->statusMessage = 'format mail invalide';
+                $this->render('register', ['statusMessage' => 
+                $this->statusMessage]);
+            }
+            else {
+                $status = $user->save();
+                //var_dump($status);
+                if(is_int($status) & $status != 0) {
+                    $status = $user->read_user_info();
+                    print_r($status);
+                    $this->statusMessage = 'bien enregistré';
+                    $this->render('index', ['statusMessage' => 
+                    $this->statusMessage]);          
+                } else {
+                    $this->statusMessage = 'mail deja existant';     
+                    $this->render('register', ['statusMessage' => 
+                    $this->statusMessage]);
+                }
+            }
         }
     }
 
@@ -59,17 +65,18 @@ class UserController extends Controller
      */
     public function loginAction()
     {
-        if (count($_POST) === 0) {
-            $this->render('login'); 
+        $params_array = $this->request->getQueryParams();
+        if (count($params_array) === 0) {
+            $this->render('login');
         } else { 
             $statusMessage = '';
-            if(isset($_POST['user_mail']) && isset($_POST['user_pwd'])) {
-                $req = new ORM();
-                $check_user = $req->check_user_exist('users');
-                if($check_user == true) {
-                    $id = $req->get_user_id($_POST['user_mail']);
-                    $status = $req->read('users', $id);
-                    $this->statusMessage = "connexion réussie";
+            if(isset($params_array['email']) && isset($params_array['password'])) {
+                $req = new UserModel($params_array);
+                $check_user = $req->login();
+                //$check_user = $req->update_user_info();
+                var_dump($check_user);
+                if($check_user != false) {
+                    $this->statusMessage = "connexion réussie -> id : " . $check_user;
                     $this->render('index', [
                         'statusMessage' => $this->statusMessage
                     ]);
@@ -90,6 +97,14 @@ class UserController extends Controller
     public function indexAction()
     {
         echo "it works";
+    }
+
+    public function showAction()
+    {
+        $this->statusMessage = "La page dédiée à l'utilisateur";
+        $this->render('show', [
+            'statusMessage' => $this->statusMessage
+        ]);
     }
 }
 ?>

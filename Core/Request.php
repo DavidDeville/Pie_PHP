@@ -4,25 +4,34 @@ namespace Core;
 
 class Request
 {
-    private $post_array = [];
-    private $get_array = [];
+    private $params_array = [];
     public function post_content()
     {
         if($_POST) {
             foreach($_POST as $param => $value) {
-                $this->post_array[$param] = trim($value);
-                $this->post_array[$param] = htmlspecialchars($value, ENT_QUOTES);
-                $this->post_array[$param] = stripslashes($value);
+                $this->params_array[$param] = trim($value);
+                $this->params_array[$param] = htmlspecialchars($value, ENT_QUOTES);
+                $this->params_array[$param] = stripslashes($value);
+                unset($_POST[$param]);
             }
         }
 
         if($_GET) {
             foreach($_POST as $param => $value) {
-                $this->get_array[$param] = trim($value);
-                $this->get_array[$param] = htmlspecialchars($value, ENT_QUOTES, UTF-8);
-                $this->get_array[$param] = stripslashes($value);
+                $this->params_array[$param] = trim($value);
+                $this->params_array[$param] = htmlspecialchars($value, ENT_QUOTES);
+                $this->params_array[$param] = stripslashes($value);
             }
         }
+        if(isset($this->params_array['password'])) {
+            $salt = "kebab";
+            $this->params_array['password'] = hash('ripemd160', $this->params_array['password'] . $salt);
+        }
+    }
+
+    public function getQueryParams()
+    {
+        return $this->params_array;
     }
     //$request->password donne le pwd
 }

@@ -4,8 +4,6 @@ namespace Core;
 
 class Database
 {
-    protected $mail;
-    protected $password;
     protected $connexion = null;
 
     /**
@@ -13,8 +11,6 @@ class Database
      */
     public function __construct()
     {
-        $this->mail = $_POST['user_mail'];
-        $this->password = $_POST['user_pwd'];
         $this->server = "localhost";
 		$this->user = "root";
 		$this->bdd_password = "root";

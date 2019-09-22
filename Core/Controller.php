@@ -14,6 +14,7 @@ abstract class Controller
     public function __construct()
     {
         $this->request = new Request();
+        $this->request->post_content();
     }
 
     /*
@@ -42,7 +43,6 @@ abstract class Controller
         $controller = basename(str_replace('\\', '/', get_class($this))); // --> UserController 
         $controller = str_replace('Controller', '', $controller); // --> User
         $file = 'src/View/' . $controller . '/' . $view . '.php'; // --> View file
-        //var_dump($file);
         if (file_exists($file)) {
             ob_start();
             include($file);
@@ -58,11 +58,8 @@ abstract class Controller
                     ]
                 ) . '.php'); // --> layout file
             self::$_render = ob_get_clean();
-            //var_dump(self::$_render);
         } else {
             echo $file . ' does not exist';
         }
-        // echo "F vaut : <br>";
-        // var_dump($file);
     }
 }
