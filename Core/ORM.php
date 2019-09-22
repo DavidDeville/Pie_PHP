@@ -45,13 +45,8 @@ class ORM extends Database
                 ':id' => $id_param
             ]);
         
-            if($status == true) {
-                return $result = $add->fetchAll(\PDO::FETCH_ASSOC);  
-            }
-            else {
-                return false;
-            }
-            return $status;
+            $result = $add->fetchAll(\PDO::FETCH_ASSOC); 
+            return $result; 
     }
 
     /**
@@ -79,10 +74,10 @@ class ORM extends Database
             $update->bindValue(':' . $field_name, $value);
         }
         $update->bindValue(':id', $id);
-        var_dump($q);
+        //var_dump($q);
         
         $status = $update->execute();
-        $update->debugDumpParams();
+        //$update->debugDumpParams();
         return $status;
     }
 
@@ -101,11 +96,12 @@ class ORM extends Database
         $status = $delete->execute([
             ':id' => $id
             ]);
-        if($status == true) {
-            return $status;
-        } else {
-            return false;
-        }
+        // if($status == true) {
+        //     return $status;
+        // } else {
+        //     return false;
+        // }
+        return $status;
     }
 
     /**
@@ -118,14 +114,15 @@ class ORM extends Database
     public function read_all(string $table)
     {
         $add = $this->connexion->prepare('SELECT * FROM ' . $table);
-            $status = $add->execute();
-        
-            if($status == true) {
-                return $result = $add->fetchAll(\PDO::FETCH_ASSOC);
-            }
-            else {
-                return false;
-            }
+        $result = $add->execute();
+        // if($status == true) {
+        //     return $result = $add->fetchAll(\PDO::FETCH_ASSOC);
+        // }
+        // else {
+        //     return false;
+        // }
+        $result = $add->fetchAll(\PDO::FETCH_ASSOC);
+        return $result;
     }
 
     /**
@@ -140,14 +137,16 @@ class ORM extends Database
     public function find(string $table, array $params)
     {
         $add = $this->connexion->prepare('SELECT * FROM ' . $table);
-            $status = $add->execute();
-        
-            if($status == true) {
-                return $result = $add->fetchAll(\PDO::FETCH_ASSOC);
-            }
-            else {
-                return false;
-            }
+        $status = $add->execute();
+    
+        // if($status == true) {
+        //     return $result = $add->fetchAll(\PDO::FETCH_ASSOC);
+        // }
+        // else {
+        //     return false;
+        // }
+        $result = $add->fetchAll(\PDO::FETCH_ASSOC);
+        return $result;
     }
 
     /**
@@ -166,14 +165,16 @@ class ORM extends Database
             ':email' => $params['email']
         ]);
 
-        if($status == true) {
-            $result = $add->fetchAll(\PDO::FETCH_ASSOC);
-            var_dump($result);
-            return $result[0]['id'];
-        }
-        else {
-            return false;
-        }
+        // if($status == true) {
+        //     $result = $add->fetchAll(\PDO::FETCH_ASSOC);
+        //     var_dump($result);
+        //     return $result[0]['id'];
+        // }
+        // else {
+        //     return false;
+        // }
+        $result = $add->fetchAll(\PDO::FETCH_ASSOC);
+        return $result;
     }
 
     /**
@@ -183,13 +184,24 @@ class ORM extends Database
      * 
      * @return bool - true if the request has been executed, false otherwise
      */
+    // public function check_user_exist($table, $params)
+    // {    
+    //     $add = $this->connexion->prepare('SELECT * FROM ' . $table  . ' WHERE email = :email AND password = :password');
+    //     $status = $add->execute([
+    //         ':email' => $params['email'],
+    //         ':password' => $params['password']
+    //     ]);
+        
+    //     return $add->fetchAll(\PDO::FETCH_ASSOC);
+    // }
+
     public function check_user_exist($table, $params)
     {    
-        $add = $this->connexion->prepare('SELECT * FROM ' . $table  . ' WHERE email = :email AND password = :password');
+        $add = $this->connexion->prepare('SELECT * FROM ' . $table  . ' WHERE email = :email');
         $status = $add->execute([
-            ':email' => $params['email'],
-            ':password' => $params['password']
+            ':email' => $params['email']
         ]);
+        
         return $add->fetchAll(\PDO::FETCH_ASSOC);
     }
 }

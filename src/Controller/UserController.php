@@ -38,8 +38,8 @@ class UserController extends Controller
             }
             else {
                 $status = $user->save();
-                //var_dump($status);
-                if(is_int($status) & $status != 0) {
+                var_dump($status);
+                if($status != null) {
                     $status = $user->read_user_info();
                     print_r($status);
                     $this->statusMessage = 'bien enregistré';
@@ -72,8 +72,9 @@ class UserController extends Controller
             $statusMessage = '';
             if(isset($params_array['email']) && isset($params_array['password'])) {
                 $req = new UserModel($params_array);
-                $check_user = $req->login();
+                //$check_user = $req->login();
                 //$check_user = $req->update_user_info();
+                $check_user = $req->delete_user_info();
                 var_dump($check_user);
                 if($check_user != false) {
                     $this->statusMessage = "connexion réussie -> id : " . $check_user;

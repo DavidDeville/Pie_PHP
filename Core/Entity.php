@@ -49,7 +49,7 @@ class Entity
         $user_id = intval($user_info[0]['id']);
         $salt = "kebab";
         $this->param['password'] = hash('ripemd160', "maison" . $salt);
-        $this->param['email'] = "papoune@gmail.com";
+        $this->param['email'] = "woulia@gmail.com";
         return $this->orm->update('users', $user_id, ['email' => $this->param['email'], 'password' => $this->param['password']]);
     }
 
@@ -65,6 +65,23 @@ class Entity
         $user_info = $this->orm->check_user_exist('users', $this->param);
         //var_dump($user_info[0]['id']);
         $user_id = intval($user_info[0]['id']);
-        return $this->orm->delete('users', $user_id);
+        if($user_id == null) {
+            return null;
+        }
+        else {
+            return $this->orm->delete('users', $user_id);
+        }
     }
+
+    // public function delete_user_info()
+    // {
+    //     $user_info = $this->orm->check_user_exist('users', $this->param);
+    //     $user_id = count($user_info);
+    //     if($user_id == 0) {
+    //         return null;
+    //     }
+    //     else {
+    //         return $this->orm->delete('users', $user_id);
+    //     }
+    // }
 }
